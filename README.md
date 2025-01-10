@@ -1,0 +1,1 @@
+a pronúncia é "arancar"
