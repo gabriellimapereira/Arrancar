@@ -16,6 +16,10 @@ class AudioArquive(ABC):
         self._duration = self.getDuration()
 
     @property
+    def name(self):
+        return self._name
+
+    @property
     def path(self):
         return self._path
 
@@ -83,12 +87,20 @@ class SoundEffect(AudioArquive):
         print(self._name, self._duration, self._path)
 
     def playEffect(self):
+        if not pygame.mixer.get_init():
+            pygame.mixer.init()
+
+        sound = pygame.mixer.Sound(self._path)
         channel = pygame.mixer.find_channel()
+
         if channel:
-            channel.play(self._path)
+            channel.play(sound)
             print(f"tocando: {self._name}...")
+            while channel.get_busy():
+                pass  
         else:
             print("sem canais disponíveis para tocar o efeito!\n")
+
 
 class Recording(AudioArquive):
     def __init__(self, name, autor):

@@ -18,6 +18,10 @@ class User():
         return self._id
     
     @property
+    def recordings(self):
+        return self._recordings
+    
+    @property
     def linkedSongs(self):
         return self._likedSongs
 

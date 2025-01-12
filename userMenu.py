@@ -143,7 +143,7 @@ def podcastMenu(user, memorySystem):
             name = input("qual o nome do podcast a ser reproduzido? ")
             podcast = memorySystem.findAudioByName(memorySystem.podcasts, name)
             if podcast:
-                audioMenu(podcast, user)
+                audioMenu(podcast)
             else:
                 print("o podcast não foi encontrado! tente novamente :/\n")
         elif choice == "0":
@@ -168,7 +168,7 @@ def superPodcastMenu(superUser, memorySystem):
             name = input("qual o nome do podcast a ser reproduzido? ")
             podcast = memorySystem.findAudioByName(memorySystem.podcasts, name)
             if podcast:
-                audioMenu(podcast, superUser)
+                audioMenu(podcast)
             else:
                 print("o podcast não foi encontrado! tente novamente :/\n")
         elif choice == "3":
@@ -313,13 +313,13 @@ def audioMenu(audio):
 def menuSoundEffects(memorySystem):
     while True:
         print("\nmenu de efeitos sonoros:\n")
-        for i in range(0, len(memorySystem.soundEffects) - 1):
+        for i in range(0, len(memorySystem.soundEffects)):
             print("{} - {}\n".format(i, memorySystem.soundEffects[i].name))
 
         choice = input("escolha um efeito sonoro pelo número: ")
         try:
             choice = int(choice)
-            if 0 <= choice < len(memorySystem.soundEffects) - 1:
+            if 0 <= choice < len(memorySystem.soundEffects):
                 effect = memorySystem.soundEffects[choice]
                 thread = threading.Thread(target=effect.playEffect)
                 thread.start()
