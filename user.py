@@ -16,6 +16,10 @@ class User():
     @property
     def id(self):
         return self._id
+    
+    @property
+    def linkedSongs(self):
+        return self._likedSongs
 
     def generateUniqueId(self, userList, superUserList):
         usedIds = {user._id for user in userList + superUserList}
@@ -31,3 +35,7 @@ class SuperUser(User):
     def __init__(self, name, userList, superUserList, password):
         super().__init__(name, userList, superUserList)
         self._password = password
+
+    @property
+    def password(self):
+        return self._password

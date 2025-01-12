@@ -3,8 +3,7 @@ from audio import AudioArquive, Music, Podcast, SoundEffect, Recording
 from recorder import Recorder
 from systemMemory import SystemMemory
 import time
-
-memorySystem = SystemMemory()
+import threading
 
 def menuUsuario(user, memorySystem):
     while True:
@@ -19,11 +18,11 @@ def menuUsuario(user, memorySystem):
         if choice == "1":
             musicsMenu(user, memorySystem)
         elif choice == "2":
-            soundEffectsMenu(user, memorySystem)
+            soundEffectsMenu(memorySystem)
         elif choice == "3":
             podcastMenu(user, memorySystem)
         elif choice == "4":
-            recordingsMenu(user)
+            recordingsMenu(user, memorySystem)
         elif choice == "0":
             print(f"{user._name} saiu do sistema")
             break
@@ -43,16 +42,16 @@ def menuSuperUsuario(superUser, memorySystem):
         if choice == "1":
             musicsMenu(superUser, memorySystem)
         elif choice == "2":
-            soundEffectsMenu(superUser, memorySystem)
+            soundEffectsMenu(memorySystem)
         elif choice == "3":
             superPodcastMenu(superUser, memorySystem)
         elif choice == "4":
-            recordingsMenu(superUser)
+            recordingsMenu(superUser, memorySystem)
         elif choice == "0":
-            print(f"{superUser._name} saiu do sistema.")
+            print(f"{superUser._name} saiu do sistema!")
             break
         else:
-            print("opção inválida. tente novamente.")
+            print("opção inválida. tente novamente!")
 
 def musicsMenu(user, memorySystem):
     while True:
@@ -61,45 +60,48 @@ def musicsMenu(user, memorySystem):
         print("2 - cadastrar música")
         print("3 - reproduzir música")
         print("4 - apagar música")
-        print("5 - curtir música")
         print("0 - voltar")
         choice = input("escolha uma opção: ")
 
         if choice == "1":
-            for i in memorySystem.musics:
-                i.displayData()
+            if len(memorySystem.musics) == 0:
+                print("nenhuma música na lista!\n")
+            else:
+                for i in memorySystem.musics:
+                    i.displayData()
+
         elif choice == "2":
-            print("cadastrando música...")
-            name = input("qual o nome da música a ser adicionada?")
-            musicType = input("qual o tipo da música?")
-            singer = input("por último, qual o cantor/banda da música?")
+            print("cadastrando música...\n")
+            name = input("qual o nome da música a ser adicionada? ")
+            musicType = input("qual o tipo da música? ")
+            singer = input("por último, qual o cantor/banda da música? ")
             newMusic = Music(name, singer, musicType)
             memorySystem.musics.append(newMusic)
             print("música cadastrada com sucesso!\n")
         elif choice == "3":
             name = input("qual o nome da música a ser reproduzida?")
-            if name in memorySystem.soundEffects:
-                music = SoundEffect().findAudioByName(memorySystem, name)
+            music = memorySystem.findAudioByName(memorySystem.musics, name)
+            if music:
                 musicMenu(music, user)
             else:
                 print("a música não foi encontrada! tente novamente :/\n")
         elif choice == "4":
             name = input("digite o nome da música a ser removida: ")
-            music = Music().findAudioByName(memorySystem, name)
+            music = memorySystem.findAudioByName(memorySystem.musics, name)
             memorySystem.musics.remove(music)
         elif choice == "5":
             print("curtindo música...")
         elif choice == "0":
             break
         else:
-            print("opção inválida. tente novamente")
+            print("opção inválida. tente novamente!")
 
-def soundEffectsMenu(user, memorySystem):
+def soundEffectsMenu(memorySystem):
     while True:
         print("\nmenu de efeitos sonoros:")
         print("1 - listar efeitos sonoros")
         print("2 - cadastrar efeito sonoro")
-        print("3 - reproduzir efeito sonoro")
+        print("3 - reproduzir efeitos sonoros")
         print("4 - apagar efeito sonoro")
         print("0 - voltar")
         choice = input("escolha uma opção: ")
@@ -108,21 +110,18 @@ def soundEffectsMenu(user, memorySystem):
             for i in memorySystem.soundEffects:
                 i.displayData()
         elif choice == "2":
-            name = input("qual o nome do efeito a ser adicionado?")
+            name = input("qual o nome do efeito a ser adicionado? ")
             newEffect = SoundEffect(name)
             memorySystem.addSoundEffect(newEffect)
             print("música cadastrada com sucesso!\n")
-
         elif choice == "3":
-            name = input("qual o nome do efeito sonoro a ser reproduzido?")
-            if name in memorySystem.soundEffects:
-                effect = SoundEffect().findAudioByName(memorySystem, name)
-                audioMenu(effect)
+            if len(memorySystem.soundEffects) > 0:
+                menuSoundEffects(memorySystem)
             else:
-                print("o efeito sonoro não foi encontrado! tente novamente :/\n")
+                print("não há nenhum efeito disponível para ser reproduzido!\n")
         elif choice == "4":
             name = input("digite o nome do efeito a ser removido: ")
-            effect = SoundEffect().findAudioByName(memorySystem, name)
+            effect = memorySystem.findAudioByName(memorySystem.soundEffects, name)
             memorySystem.soundEffects.remove(effect)
         elif choice == "0":
             break
@@ -141,23 +140,24 @@ def podcastMenu(user, memorySystem):
             for i in memorySystem.podcasts:
                 i.displayData()
         elif choice == "2":
-            name = input("qual o nome do podcast a ser reproduzido?")
-            if name in memorySystem.podcasts:
-                podcast = SoundEffect().findAudioByName(memorySystem, name)
-                audioMenu(podcast)
+            name = input("qual o nome do podcast a ser reproduzido? ")
+            podcast = memorySystem.findAudioByName(memorySystem.podcasts, name)
+            if podcast:
+                audioMenu(podcast, user)
             else:
                 print("o podcast não foi encontrado! tente novamente :/\n")
         elif choice == "0":
             break
         else:
-            print("opção inválida. tente novamente.")
+            print("opção inválida. tente novamente!")
 
 def superPodcastMenu(superUser, memorySystem):
     while True:
         print("\nmenu de podcasts (super usuário):")
         print("1 - listar podcasts")
-        print("2 - adicionar podcast")
-        print("3 - apagar podcast")
+        print("2 - escutar podcast")
+        print("3 - adicionar podcast")
+        print("4 - apagar podcast")
         print("0 - voltar")
         choice = input("escolha uma opção: ")
 
@@ -165,24 +165,31 @@ def superPodcastMenu(superUser, memorySystem):
             for i in memorySystem.podcasts:
                 i.displayData()
         elif choice == "2":
+            name = input("qual o nome do podcast a ser reproduzido? ")
+            podcast = memorySystem.findAudioByName(memorySystem.podcasts, name)
+            if podcast:
+                audioMenu(podcast, superUser)
+            else:
+                print("o podcast não foi encontrado! tente novamente :/\n")
+        elif choice == "3":
             print("cadastrando música...")
-            name = input("qual o nome do podcast a ser adicionado?")
-            host = input("qual o nome do host dele?")
-            category = input("qual a categoria?")
-            date = input("por último, qual a data de lançamento do podcast?")
+            name = input("qual o nome do podcast a ser adicionado? ")
+            host = input("qual o nome do host dele? ")
+            category = input("qual a categoria? ")
+            date = input("por último, qual a data de lançamento do podcast? ")
             newPodcast = Podcast(name, host, category, date)
             memorySystem.addPodcast(newPodcast)
             print("música cadastrada com sucesso!\n")
-        elif choice == "3":
+        elif choice == "4":
             name = input("digite o nome do podcast a ser removido: ")
-            podcast = Podcast().findAudioByName(memorySystem, name)
+            podcast = memorySystem.findAudioByName(memorySystem.podcasts, name)
             memorySystem.podcasts.remove(podcast)
         elif choice == "0":
             break
         else:
             print("opção inválida. tente novamente.")
 
-def recordingsMenu(user):
+def recordingsMenu(user, memorySystem):
     while True:
         print("\nmenu de gravações:")
         print("1 - listar gravações")
@@ -195,17 +202,45 @@ def recordingsMenu(user):
             for i in user.recordings:
                 i.displayData()
         elif choice == "2":
-            print("iniciando gravação...")
-            
+            while True:
+                name = input("digite o nome do áudio que será gravado: ")
+                print("iniciando gravação...")
+
+                pathRecord = Recording.record(name)
+                newRecord = Recording("name", pathRecord, user.name)
+
+                print("o áudio ficou assim...")
+                newRecord.playAudio()
+
+                while True:
+                    option = input("deseja manter (1) ou regravar (0)? ")
+                    if option == "1":
+                        user.recordings.append(newRecord)
+                        print("foi adicionado à sua lista de gravações!")
+                        break
+                    elif option == "0":
+                        print("regravando áudio...")
+                        break
+                    else:
+                        print("opção inválida, digite 1 para manter ou 0 para regravar!")
+                
+                if option == "1":
+                    break
 
         elif choice == "3":
-            print("reproduzindo gravação...")
+            name = input("qual o nome da música a ser reproduzida?")
+            recording = memorySystem.findAudioByName(memorySystem.recordings, name)
+            if recording:
+                audioMenu(recording, user)
+            else:
+                print("a música não foi encontrada! tente novamente :/\n")
         elif choice == "0":
             break
         else:
-            print("opção inválida. tente novamente.")
+            print("opção inválida. tente novamente")
 
 def musicMenu(audio, user):
+    audio.playAudio()
     while True:
         print("\nmenu:")
         print("1 - pausar/despausar música")
@@ -245,12 +280,13 @@ def musicMenu(audio, user):
             print("opção inválida, tente novamente")
 
 def audioMenu(audio):
+    audio.playAudio()
+
     while True:
         print("\nmenu:")
-        print("1 - pausar/despausar música")
-        print("2 - parar música")
-        print("3 - curtir música")
-        print("4 - sair")
+        print("1 - pausar/despausar")
+        print("2 - parar")
+        print("0 - sair")
         
         try:
             choice = int(input("escolha uma opção: "))
@@ -266,10 +302,31 @@ def audioMenu(audio):
                 print("áudio parado")
                 audio.stopAudio()
                 break
-            elif choice == 4:
+            elif choice == 0:
                 print("saindo do menu")
                 break
             else:
                 print("opção inválida, tente novamente")
         except ValueError:
             print("opção inválida, tente novamente")
+
+def menuSoundEffects(memorySystem):
+    while True:
+        print("\nmenu de efeitos sonoros:\n")
+        for i in range(0, len(memorySystem.soundEffects) - 1):
+            print("{} - {}\n".format(i, memorySystem.soundEffects[i].name))
+
+        choice = input("escolha um efeito sonoro pelo número: ")
+        try:
+            choice = int(choice)
+            if 0 <= choice < len(memorySystem.soundEffects) - 1:
+                effect = memorySystem.soundEffects[choice]
+                thread = threading.Thread(target=effect.playEffect)
+                thread.start()
+            elif choice == -1:
+                print("encerrando reprodução de áudios...")
+                break
+            else:
+                print("opção inválida, tente novamente!")
+        except ValueError:
+            print("opção inválida, tente novamente!")

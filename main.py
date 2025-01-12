@@ -1,15 +1,17 @@
-import pygame
 from user import User, SuperUser
-from audio import AudioArquive, Music, Podcast, SoundEffect, Recording
+from systemMemory import SystemMemory
+import userMenu
 
 userList = []
 superUserList = []
+memorySystem = SystemMemory()
 
 def loginUser():
     userId = int(input("digite seu id de usuário: "))
     for user in userList:
         if user.id == userId:
             print(f"login bem-sucedido para o usuário {user._name}!")
+            userMenu.menuUsuario(user, memorySystem)
             return user
     print("id de usuário não encontrado!")
     return None
@@ -17,10 +19,11 @@ def loginUser():
 def loginSuperUser():
     userId = int(input("digite seu id de super usuário: "))
     password = input("digite sua senha: ")
-    for super_user in superUserList:
-        if super_user.id == userId and super_user._password == password:
-            print(f"login bem-sucedido para o super usuário {super_user._name}!")
-            return super_user
+    for superUser in superUserList:
+        if superUser.id == userId and superUser.password == password:
+            print(f"login bem-sucedido para o super usuário {superUser.name}!")
+            userMenu.menuSuperUsuario(superUser, memorySystem)
+            return superUser
     print("id ou senha de super usuário incorretos!")
     return None
 
@@ -35,15 +38,14 @@ def registerUser():
     if choice == "0":
         name = input("digite o seu nome como usuário: ")
         newUser = User(name, userList, superUserList)
-        print("usuário cadastrado! o seu id é:", newUser._id, ". não se esqueça dele!\n")
+        print("usuário cadastrado! o seu id é:", newUser.id, ". não se esqueça dele!\n")
         userList.append(newUser)
     else:
         name = input("digite o seu nome como super usuário: ")
         password = input("agora digite a senha. se lembre da senha, ou caso contrário, é F: ")
         newUser = SuperUser(name, userList, superUserList, password)
-        print("usuário cadastrado! o seu id é:", newUser._id, ". não se esqueça dele!\n")
+        print("usuário cadastrado! o seu id é:", newUser.id, ". não se esqueça dele!\n")
         superUserList.append(newUser)
-
 
 def deleteUser():
     print("você escolheu apagar o registro de um usuário")
@@ -51,7 +53,6 @@ def deleteUser():
 def listUsers():
     for i in userList:
         i.displayUser()
-
     for i in superUserList:
         i.displayUser()
 
