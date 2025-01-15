@@ -1,6 +1,5 @@
 from user import User, SuperUser
 from audio import AudioArquive, Music, Podcast, SoundEffect, Recording
-from recorder import Recorder
 from systemMemory import SystemMemory
 import time
 import threading

@@ -101,10 +101,9 @@ class SoundEffect(AudioArquive):
         else:
             print("sem canais disponíveis para tocar o efeito!\n")
 
-
 class Recording(AudioArquive):
     def __init__(self, name, autor):
-        super().__init__(name)
+        super().__init__(name, None)
         self._autor = autor
 
     def displayData(self):
