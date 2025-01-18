@@ -205,8 +205,8 @@ def recordingsMenu(user, memorySystem):
                 name = input("digite o nome do áudio que será gravado: ")
                 print("iniciando gravação...")
 
-                pathRecord = Recording.record(name)
-                newRecord = Recording("name", pathRecord, user.name)
+                Recording.record(name)
+                newRecord = Recording(name, name + '.mp3', user.name)
 
                 print("o áudio ficou assim...")
                 newRecord.playAudio()

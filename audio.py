@@ -8,6 +8,8 @@ import sounddevice as sd
 import numpy as np
 from scipy.io.wavfile import write
 import threading
+import os
+
 
 class AudioArquive(ABC):
     def __init__(self, name, path=None):
@@ -57,6 +59,9 @@ class AudioArquive(ABC):
         return path
 
     def getDuration(self):
+        if not os.path.exists(self._path):
+            print(f"Erro: O arquivo {self._path} não existe.")
+            return
         audioInfo = mediainfo(self._path)
         return float(audioInfo['duration'])
 
@@ -102,8 +107,8 @@ class SoundEffect(AudioArquive):
             print("sem canais disponíveis para tocar o efeito!\n")
 
 class Recording(AudioArquive):
-    def __init__(self, name, autor):
-        super().__init__(name, None)
+    def __init__(self, name, path, autor):
+        super().__init__(name, path)
         self._autor = autor
 
     def displayData(self):
@@ -130,4 +135,4 @@ class Recording(AudioArquive):
 
         audioBlocks = np.concatenate(audioBlocks, axis=0)
 
-        write(name + ".wav", 44100, (audioBlocks * 32767).astype(np.int16))
+        write(name + ".mp3", 44100, (audioBlocks * 32767).astype(np.int16))
