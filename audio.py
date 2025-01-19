@@ -1,9 +1,8 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 import pygame
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
 from pydub.utils import mediainfo
-from systemMemory import SystemMemory
 import sounddevice as sd
 import numpy as np
 from scipy.io.wavfile import write
@@ -106,6 +105,8 @@ class SoundEffect(AudioArquive):
         else:
             print("sem canais disponíveis para tocar o efeito!\n")
 
+from pydub import AudioSegment
+
 class Recording(AudioArquive):
     def __init__(self, name, path, autor):
         super().__init__(name, path)
@@ -134,5 +135,19 @@ class Recording(AudioArquive):
         recordThread.join()
 
         audioBlocks = np.concatenate(audioBlocks, axis=0)
+        wavFile = f"{name}.wav"
+        write(wavFile, 44100, (audioBlocks * 32767).astype(np.int16))
 
-        write(name + ".mp3", 44100, (audioBlocks * 32767).astype(np.int16))
+        mp3File = f"{name}.mp3"
+        try:
+            AudioSegment.from_wav(wavFile).export(mp3File, format="mp3")
+            print(f"arquivo convertido para mp3: {mp3File}")
+        except Exception as e:
+            print(f"erro ao converter o arquivo para mp3: {e}")
+            return
+
+        try:
+            os.remove(wavFile)
+            print(f"arquivo temporário wav removido: {wavFile}")
+        except Exception as e:
+            print(f"erro ao remover o arquivo wav: {e}")

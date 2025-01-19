@@ -1,8 +1,7 @@
-from user import User, SuperUser
-from audio import AudioArquive, Music, Podcast, SoundEffect, Recording
-from systemMemory import SystemMemory
+from audio import Music, Podcast, SoundEffect, Recording
 import time
 import threading
+import os
 
 def menuUsuario(user, memorySystem):
     while True:
@@ -81,15 +80,12 @@ def musicsMenu(user, memorySystem):
             name = input("qual o nome da música a ser reproduzida?")
             music = memorySystem.findAudioByName(memorySystem.musics, name)
             if music:
-                musicMenu(music, user)
+                musicMenu(music)
             else:
                 print("a música não foi encontrada! tente novamente :/\n")
         elif choice == "4":
             name = input("digite o nome da música a ser removida: ")
             music = memorySystem.findAudioByName(memorySystem.musics, name)
-            memorySystem.musics.remove(music)
-        elif choice == "5":
-            print("curtindo música...")
         elif choice == "0":
             break
         else:
@@ -112,12 +108,12 @@ def soundEffectsMenu(memorySystem):
             name = input("qual o nome do efeito a ser adicionado? ")
             newEffect = SoundEffect(name)
             memorySystem.addSoundEffect(newEffect)
-            print("música cadastrada com sucesso!\n")
+            print("música cadastrada com sucesso!")
         elif choice == "3":
             if len(memorySystem.soundEffects) > 0:
                 menuSoundEffects(memorySystem)
             else:
-                print("não há nenhum efeito disponível para ser reproduzido!\n")
+                print("não há nenhum efeito disponível para ser reproduzido!")
         elif choice == "4":
             name = input("digite o nome do efeito a ser removido: ")
             effect = memorySystem.findAudioByName(memorySystem.soundEffects, name)
@@ -144,7 +140,7 @@ def podcastMenu(user, memorySystem):
             if podcast:
                 audioMenu(podcast)
             else:
-                print("o podcast não foi encontrado! tente novamente :/\n")
+                print("o podcast não foi encontrado! tente novamente :/")
         elif choice == "0":
             break
         else:
@@ -169,7 +165,7 @@ def superPodcastMenu(superUser, memorySystem):
             if podcast:
                 audioMenu(podcast)
             else:
-                print("o podcast não foi encontrado! tente novamente :/\n")
+                print("o podcast não foi encontrado! tente novamente :/")
         elif choice == "3":
             print("cadastrando música...")
             name = input("qual o nome do podcast a ser adicionado? ")
@@ -178,7 +174,7 @@ def superPodcastMenu(superUser, memorySystem):
             date = input("por último, qual a data de lançamento do podcast? ")
             newPodcast = Podcast(name, host, category, date)
             memorySystem.addPodcast(newPodcast)
-            print("música cadastrada com sucesso!\n")
+            print("música cadastrada com sucesso!")
         elif choice == "4":
             name = input("digite o nome do podcast a ser removido: ")
             podcast = memorySystem.findAudioByName(memorySystem.podcasts, name)
@@ -203,10 +199,11 @@ def recordingsMenu(user, memorySystem):
         elif choice == "2":
             while True:
                 name = input("digite o nome do áudio que será gravado: ")
+                audio_file = name + '.mp3'
                 print("iniciando gravação...")
 
-                Recording.record(name)
-                newRecord = Recording(name, name + '.mp3', user.name)
+                Recording.record(name) 
+                newRecord = Recording(name, audio_file, user.name)
 
                 print("o áudio ficou assim...")
                 newRecord.playAudio()
@@ -216,27 +213,39 @@ def recordingsMenu(user, memorySystem):
                     if option == "1":
                         user.recordings.append(newRecord)
                         print("foi adicionado à sua lista de gravações!")
+                        if newRecord.audioIsPlaying():
+                            newRecord.stopAudio()
                         break
                     elif option == "0":
+                        if os.path.exists(audio_file):
+                            os.remove(audio_file)
+                            print("o arquivo antigo foi excluído!")
+                        else:
+                            print("não foi encontrado um arquivo antigo para excluir")
+
                         print("regravando áudio...")
                         break
                     else:
                         print("opção inválida, digite 1 para manter ou 0 para regravar!")
-                
+
                 if option == "1":
                     break
-
         elif choice == "3":
-            name = input("qual o nome da música a ser reproduzida?")
-            recording = memorySystem.findAudioByName(memorySystem.recordings, name)
-            if recording:
-                audioMenu(recording, user)
+            if not user.recordings:
+                print("não há gravações para reproduzir.")
             else:
-                print("a música não foi encontrada! tente novamente :/\n")
+                for i, recording in enumerate(user.recordings):
+                    print(f"{i + 1} - {recording.name}")
+                choice = int(input("escolha a gravação para reproduzir: ")) - 1
+                if 0 <= choice < len(user.recordings):
+                    audioMenu(user.recordings[choice])
+                else:
+                    print("opção inválida!")
         elif choice == "0":
+            print("voltando ao menu anterior...")
             break
         else:
-            print("opção inválida. tente novamente")
+            print("opção inválida, tente novamente!")
 
 def musicMenu(audio, user):
     audio.playAudio()
@@ -264,11 +273,11 @@ def musicMenu(audio, user):
             elif choice == 3:
                 if audio in user.linkedSongs:
                     time.sleep(1)
-                    print("música retirada da playlist de músicas curtidas!\n")
+                    print("música retirada da playlist de músicas curtidas!")
                     user.linkedSongs.remove(audio)
                 else:
                     time.sleep(1)
-                    print("música adicionada à playlist de músicas curtidas!\n")
+                    print("música adicionada à playlist de músicas curtidas!")
                     user.linkedSongs.append(audio)
             elif choice == 4:
                 print("saindo do menu...")
@@ -315,7 +324,7 @@ def menuSoundEffects(memorySystem):
         for i in range(0, len(memorySystem.soundEffects)):
             print("{} - {}\n".format(i, memorySystem.soundEffects[i].name))
 
-        choice = input("escolha um efeito sonoro pelo número: ")
+        choice = input("escolha um efeito sonoro pelo número (ou digite -1 para sair): ")
         try:
             choice = int(choice)
             if 0 <= choice < len(memorySystem.soundEffects):
