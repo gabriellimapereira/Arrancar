@@ -9,7 +9,6 @@ from scipy.io.wavfile import write
 import threading
 import os
 
-
 class AudioArquive(ABC):
     def __init__(self, name, path=None):
         self._name = name

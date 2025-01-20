@@ -5,6 +5,20 @@ os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 from user import User, SuperUser
 from systemMemory import SystemMemory
 import userMenu
+from userMenu import clear
+
+def manual():
+    while True:
+        print("manual de uso:\n")
+        print("áudio: \nexistem quatro classes de áudio: músicas, podcasts, efeitos sonoros e as gravações")
+        print("as músicas, podcasts e efeitos sonoros devem estar no computador do usuário (de preferência no formato .mp3). para reproduzí-los, deve ser feito o cadastro deles. \nou seja, quando entrar no menu de cadastro de algum desses áudios, preencha os campos pedidos. logo após isso, será aberta uma window para a seleção do arquivo de áudio.")
+        print("todos esses áudios cadastrados podem ser acessados por todos os usuários, menos as gravações. elas são particulares. os únicos que podem registrar podcasts são os super usuários.\n")
+        print("efeitos sonoros e gravações: \nos efeitos sonoros podem ser reproduzidos simultaneamente, então fique à vontade para reproduzir vários ao mesmo tempo. quanto às\n gravações, recomenda-se o uso de microfone para captação do áudio.\n")
+        print("ressalvas:\nvale ressaltar que os super usuários devem cadastrar senhas para acesso. quando qualquer tipo de usuário for cadastrado, será gerado um identificador único para ele.")
+
+        verification = input("\nentendido? (pressione Enter para continuar): ")
+        if verification.strip() or verification == "":
+            break
 
 def loginUser(userList, memorySystem):
     userId = int(input("digite seu id de usuário: "))
@@ -120,6 +134,8 @@ def loginMenu(userList, superUserList, memorySystem):
         options.get(choice, invalidChoice)()
 
 if __name__ == "__main__":
+    manual()
+    clear()
     userList = []
     superUserList = []
     memorySystem = SystemMemory()

@@ -3,6 +3,12 @@ import time
 import threading
 import os
 
+def clear():
+    if os.name == 'nt':
+        os.system('cls')
+    else:
+        os.system('clear')
+
 def menuUsuario(user, memorySystem):
     while True:
         print("\nmenu de usuário comum:")
@@ -73,14 +79,16 @@ def musicsMenu(user, memorySystem):
             name = input("qual o nome da música a ser adicionada? ")
             musicType = input("qual o tipo da música? ")
             singer = input("por último, qual o cantor/banda da música? ")
+            print("agora escolha o caminho do arquivo da música: ")
+            time.sleep(1)
             newMusic = Music(name, singer, musicType)
             memorySystem.musics.append(newMusic)
             print("música cadastrada com sucesso!\n")
         elif choice == "3":
-            name = input("qual o nome da música a ser reproduzida?")
+            name = input("qual o nome da música a ser reproduzida? ")
             music = memorySystem.findAudioByName(memorySystem.musics, name)
             if music:
-                musicMenu(music)
+                musicMenu(music, user)
             else:
                 print("a música não foi encontrada! tente novamente :/\n")
         elif choice == "4":
@@ -108,7 +116,7 @@ def soundEffectsMenu(memorySystem):
             name = input("qual o nome do efeito a ser adicionado? ")
             newEffect = SoundEffect(name)
             memorySystem.addSoundEffect(newEffect)
-            print("música cadastrada com sucesso!")
+            print("efeito cadastrada com sucesso!")
         elif choice == "3":
             if len(memorySystem.soundEffects) > 0:
                 menuSoundEffects(memorySystem)
@@ -280,6 +288,8 @@ def musicMenu(audio, user):
                     print("música adicionada à playlist de músicas curtidas!")
                     user.linkedSongs.append(audio)
             elif choice == 4:
+                if audio.audioIsPlaying():
+                    audio.stopAudio()
                 print("saindo do menu...")
                 break
             else:
