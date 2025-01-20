@@ -24,7 +24,7 @@ class AudioArquive(ABC):
         return self._path
 
     def displayData(self):
-        print(self._name, self._duration, self._path)
+        print(f"nome: {self._name} duração: {self._duration} caminho: {self._path}")
 
     def playAudio(self):
         try:
@@ -35,7 +35,6 @@ class AudioArquive(ABC):
             print(f"erro ao tentar tocar o áudio: {e}")
         except Exception as e:
             print(f"erro inesperado: {e}")
-
 
     def stopAudio(self):
         pygame.mixer.music.stop()
@@ -70,7 +69,7 @@ class Music(AudioArquive):
         self._musicalType = musicalType
 
     def displayData(self):
-        print(self._name, self._duration, self._path, self._musicalType)
+        print(f"nome: {self._name} duração: {self._duration} caminho: {self._path} cantor/banda: {self._singer} tipo musical: {self._musicalType}")
 
 class Podcast(AudioArquive):
     def __init__(self, name, host, category, date):
@@ -80,14 +79,14 @@ class Podcast(AudioArquive):
         self._date = date
 
     def displayData(self):
-        print(self._name, self._duration, self._path, self._host, self._category, self._date)
+        print(f"nome: {self._name} duração: {self._duration} caminho: {self._path} host: {self._host} categoria: {self._category} data de publicação: {self._date}")
 
 class SoundEffect(AudioArquive):
     def __init__(self, name):
         super().__init__(name)
 
     def displayData(self):
-        print(self._name, self._duration, self._path)
+        print(f"nome: {self._name} duração: {self._duration} caminho: {self._path}")
 
     def playEffect(self):
         if not pygame.mixer.get_init():
@@ -112,7 +111,7 @@ class Recording(AudioArquive):
         self._autor = autor
 
     def displayData(self):
-        print(self._name, self._duration, self._path)
+        print(f"nome: {self._name} autor: {self._autor} caminho: {self._path}")
 
     @staticmethod
     def record(name):

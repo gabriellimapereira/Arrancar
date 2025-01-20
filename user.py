@@ -21,7 +21,7 @@ class User():
         return self._recordings
     
     @property
-    def linkedSongs(self):
+    def likedSongs(self):
         return self._likedSongs
 
     def generateUniqueId(self, userList, superUserList):
@@ -33,6 +33,16 @@ class User():
             
     def displayUser(self):
         print("nome: {} id: {}\n".format(self._name, self._id))
+
+    def findRecording(self, name):
+        for recording in self._recordings:
+            if recording._name == name:
+                return recording
+        return None
+    
+    def removeRecording(self, recording):
+        if recording in self._recordings:
+            self._recordings.remove(recording)
 
 class SuperUser(User):
     def __init__(self, name, userList, superUserList, password):

@@ -30,3 +30,7 @@ class SystemMemory:
             if audio._name == name:
                 return audio
         return None
+    
+    def removeAudio(self, list, audio):
+        if audio in list:
+            list.remove(audio)

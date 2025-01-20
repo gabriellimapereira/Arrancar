@@ -20,8 +20,16 @@ def manual():
         if verification.strip() or verification == "":
             break
 
+def idInput():
+    while True:
+        id = input("digite o seu id: ")
+        if id.isdigit():
+            return int(id)
+        else:
+            print("por favor, digite apenas números inteiros!")
+
 def loginUser(userList, memorySystem):
-    userId = int(input("digite seu id de usuário: "))
+    userId = idInput()
     for user in userList:
         if user.id == userId:
             print(f"\nlogin bem-sucedido para o usuário {user._name}!")
@@ -31,7 +39,7 @@ def loginUser(userList, memorySystem):
     return None
 
 def loginSuperUser(superUserList, memorySystem):
-    userId = int(input("digite seu id de super usuário: "))
+    userId = idInput()
     password = input("digite sua senha: ")
     for superUser in superUserList:
         if superUser.id == userId and superUser.password == password:
