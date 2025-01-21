@@ -1,4 +1,5 @@
 import random
+import time
 
 class User():
     def __init__(self, name, userList, superUserList):
@@ -27,7 +28,7 @@ class User():
     def generateUniqueId(self, userList, superUserList):
         usedIds = {user._id for user in userList + superUserList}
         while True:
-            newId = random.randint(0, 9999)
+            newId = random.randint(0, 999)
             if newId not in usedIds:
                 return newId
             
@@ -43,6 +44,16 @@ class User():
     def removeRecording(self, recording):
         if recording in self._recordings:
             self._recordings.remove(recording)
+
+    def likeSong(self, music):
+        if music in self._likedSongs:
+            time.sleep(1)
+            print("música retirada da playlist de músicas curtidas!")
+            self._likedSongs.remove(music)
+        else:
+            time.sleep(1)
+            print("música adicionada à playlist de músicas curtidas!")
+            self._likedSongs.append(music)
 
 class SuperUser(User):
     def __init__(self, name, userList, superUserList, password):

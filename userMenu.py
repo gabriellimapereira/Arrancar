@@ -24,9 +24,9 @@ def menuUsuario(user, memorySystem):
         elif choice == "2":
             soundEffectsMenu(memorySystem)
         elif choice == "3":
-            podcastMenu(user, memorySystem)
+            podcastMenu(memorySystem)
         elif choice == "4":
-            recordingsMenu(user, memorySystem)
+            recordingsMenu(user)
         elif choice == "0":
             print(f"{user._name} saiu do sistema")
             break
@@ -48,9 +48,9 @@ def menuSuperUsuario(superUser, memorySystem):
         elif choice == "2":
             soundEffectsMenu(memorySystem)
         elif choice == "3":
-            superPodcastMenu(superUser, memorySystem)
+            superPodcastMenu(memorySystem)
         elif choice == "4":
-            recordingsMenu(superUser, memorySystem)
+            recordingsMenu(superUser)
         elif choice == "0":
             print(f"{superUser._name} saiu do sistema!")
             break
@@ -106,7 +106,7 @@ def musicsMenu(user, memorySystem):
             else:
                 print("músicas curtidas: ")
                 for i in user.likedSongs:
-                    print(i)
+                    print(i.name)
         elif choice == "0":
             break
         else:
@@ -123,8 +123,12 @@ def soundEffectsMenu(memorySystem):
         choice = input("escolha uma opção: ")
 
         if choice == "1":
-            for i in memorySystem.soundEffects:
-                i.displayData()
+            if not memorySystem.soundEffects:
+                print("não há efeitos sonoros cadastrados!")
+            else:
+                print("efeitos sonoros: ")
+                for i in memorySystem.soundEffects:
+                    i.displayData()
         elif choice == "2":
             name = input("qual o nome do efeito a ser adicionado? ")
             newEffect = SoundEffect(name)
@@ -148,7 +152,7 @@ def soundEffectsMenu(memorySystem):
         else:
             print("opção inválida. tente novamente!")
 
-def podcastMenu(user, memorySystem):
+def podcastMenu(memorySystem):
     while True:
         print("\nmenu de podcasts (usuário comum):")
         print("1 - listar podcasts")
@@ -171,7 +175,7 @@ def podcastMenu(user, memorySystem):
         else:
             print("opção inválida. tente novamente!")
 
-def superPodcastMenu(superUser, memorySystem):
+def superPodcastMenu(memorySystem):
     while True:
         print("\nmenu de podcasts (super usuário):")
         print("1 - listar podcasts")
@@ -213,7 +217,7 @@ def superPodcastMenu(superUser, memorySystem):
         else:
             print("opção inválida. tente novamente!")
 
-def recordingsMenu(user, memorySystem):
+def recordingsMenu(user):
     while True:
         print("\nmenu de gravações:")
         print("1 - listar gravações")
@@ -309,14 +313,7 @@ def musicMenu(audio, user):
                 audio.stopAudio()
                 break
             elif choice == 3:
-                if audio in user.linkedSongs:
-                    time.sleep(1)
-                    print("música retirada da playlist de músicas curtidas!")
-                    user.linkedSongs.remove(audio)
-                else:
-                    time.sleep(1)
-                    print("música adicionada à playlist de músicas curtidas!")
-                    user.linkedSongs.append(audio)
+                user.likeSong(audio)
             elif choice == 4:
                 if audio.audioIsPlaying():
                     audio.stopAudio()
@@ -351,12 +348,14 @@ def audioMenu(audio):
                 audio.stopAudio()
                 break
             elif choice == 0:
-                print("saindo do menu")
+                if audio.audioIsPlaying():
+                    audio.stopAudio()
+                print("saindo do menu...")
                 break
             else:
-                print("opção inválida, tente novamente")
+                print("opção inválida, tente novamente!")
         except ValueError:
-            print("opção inválida, tente novamente")
+            print("opção inválida, tente novamente!")
 
 def menuSoundEffects(memorySystem):
     while True:
@@ -372,7 +371,7 @@ def menuSoundEffects(memorySystem):
                 thread = threading.Thread(target=effect.playEffect)
                 thread.start()
             elif choice == -1:
-                print("encerrando reprodução de áudios...")
+                print("encerrando a reprodução de áudios...")
                 break
             else:
                 print("opção inválida, tente novamente!")

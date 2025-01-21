@@ -22,7 +22,7 @@ def manual():
 
 def idInput():
     while True:
-        id = input("digite o seu id: ")
+        id = input("digite o id: ")
         if id.isdigit():
             return int(id)
         else:
@@ -75,7 +75,7 @@ def deleteUser(userList, superUserList):
         if choice not in {"0", "1"}:
             print("entrada inválida. digite 0 para usuário comum ou 1 para super usuário!")
 
-    userId = int(input("digite o id do usuário que deseja apagar: "))
+    userId = idInput()
 
     if choice == "0":  
         for user in userList:
@@ -98,14 +98,14 @@ def listUsers(userList, superUserList):
         for i in userList:
             i.displayUser()
     else:
-        print("não há usuários comuns cadastrados.")
+        print("não há usuários comuns cadastrados!")
     
     print("lista de super usuários:")
     if superUserList:
         for i in superUserList:
             i.displayUser()
     else:
-        print("não há super usuários cadastrados.")
+        print("não há super usuários cadastrados!")
 
 def exitProgram():
     print("saindo do sistema... até logo!")
