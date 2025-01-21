@@ -77,15 +77,21 @@ def deleteUser(userList, superUserList):
 
     userId = idInput()
 
-    if choice == "0":  
-        for user in userList:
+    if choice == "0": 
+        if not userList:
+            print("a lista de usuários está vazia!")
+            return
+        for user in userList[:]:  
             if user.id == userId:
                 userList.remove(user)
                 print(f"usuário comum com id {userId} foi apagado com sucesso!")
                 return
         print("id de usuário comum não encontrado. tente novamente!")
-    else: 
-        for superUser in superUserList:
+    else:  
+        if not superUserList:
+            print("a lista de super usuários está vazia!")
+            return
+        for superUser in superUserList[:]:  
             if superUser.id == userId:
                 superUserList.remove(superUser)
                 print(f"super usuário com id {userId} foi apagado com sucesso!")

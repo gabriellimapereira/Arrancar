@@ -33,7 +33,7 @@ class User():
                 return newId
             
     def displayUser(self):
-        print("nome: {} id: {}\n".format(self._name, self._id))
+        print("nome: {} id: {}".format(self._name, self._id))
 
     def findRecording(self, name):
         for recording in self._recordings:

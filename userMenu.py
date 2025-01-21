@@ -90,6 +90,7 @@ def musicsMenu(user, memorySystem):
             print("músicas disponíveis:")
             for i, music in enumerate(memorySystem.musics):
                 print(f"{i + 1} - {music.name}")
+                print("------------------")
 
             choice = int(input("escolha a música para reproduzir: ")) - 1
 
@@ -134,16 +135,19 @@ def soundEffectsMenu(memorySystem):
                 print("efeitos sonoros: ")
                 for i in memorySystem.soundEffects:
                     i.displayData()
+                    print("------------------")
         elif choice == "2":
             name = input("qual o nome do efeito a ser adicionado? ")
             newEffect = SoundEffect(name)
+            print("agora escolha o caminho do arquivo do efeito sonoro: ")
+            time.sleep(1)
             memorySystem.addSoundEffect(newEffect)
             print(f"efeito {name} cadastrada com sucesso!")
         elif choice == "3":
-            if len(memorySystem.soundEffects) > 0:
-                menuSoundEffects(memorySystem)
-            else:
+            if not memorySystem.soundEffects:
                 print("não há nenhum efeito disponível para ser reproduzido!")
+            else:
+                menuSoundEffects(memorySystem)              
         elif choice == "4":
             name = input("digite o nome do efeito a ser removido: ")
             soundEffect = memorySystem.findAudioByName(memorySystem.soundEffects, name)
@@ -172,6 +176,7 @@ def podcastMenu(memorySystem):
                 print("podcasts cadastrados:")
                 for i in memorySystem.podcasts:
                     i.displayData()
+                    print("------------------")
         elif choice == "2":
             name = input("qual o nome do podcast a ser reproduzido? ")
             podcast = memorySystem.findAudioByName(memorySystem.podcasts, name)
@@ -198,8 +203,10 @@ def superPodcastMenu(memorySystem):
             if not memorySystem.podcasts:
                 print("nenhum podcast cadastrado!")
             else:
+                print("podcasts cadastrados: ")
                 for i in memorySystem.podcasts:
                     i.displayData()
+                    print("------------------")
         elif choice == "2":
             name = input("qual o nome do podcast a ser reproduzido? ")
             podcast = memorySystem.findAudioByName(memorySystem.podcasts, name)
@@ -213,6 +220,8 @@ def superPodcastMenu(memorySystem):
             host = input("qual o nome do host dele? ")
             category = input("qual a categoria? ")
             date = input("por último, qual a data de lançamento do podcast? ")
+            print("agora escolha o caminho do arquivo do podcast: ")
+            time.sleep(1)
             newPodcast = Podcast(name, host, category, date)
             memorySystem.addPodcast(newPodcast)
             print("podcast cadastrada com sucesso!")
@@ -246,6 +255,7 @@ def recordingsMenu(user):
                 print(f"gravações do usuário {user.name}:")
                 for i in user.recordings:
                     i.displayData()
+                    print("------------------")
         elif choice == "2":
             while True:
                 name = input("digite o nome do áudio que será gravado: ")

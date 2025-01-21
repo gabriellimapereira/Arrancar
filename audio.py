@@ -8,8 +8,11 @@ import numpy as np
 from scipy.io.wavfile import write
 import threading
 import os
+from pydub import AudioSegment
 
 class AudioArquive(ABC):
+    __slots__ = ['_name', '_path', '_duration']
+
     def __init__(self, name, path=None):
         self._name = name
         self._path = path if path else self.findPath()
@@ -22,7 +25,7 @@ class AudioArquive(ABC):
     @property
     def path(self):
         return self._path
-
+    
     def displayData(self):
         print(f"nome: {self._name} duração: {self._duration} caminho: {self._path}")
 
@@ -63,6 +66,8 @@ class AudioArquive(ABC):
         return float(audioInfo['duration'])
 
 class Music(AudioArquive):
+    __slots__ = ['_singer', '_musicalType']
+
     def __init__(self, name, singer, musicalType):
         super().__init__(name)
         self._singer = singer
@@ -71,13 +76,15 @@ class Music(AudioArquive):
     def displayData(self):
         print(
             f"nome:           {self._name}\n"
-            f"duração:        {self._duration}\n"
+            f"duração:        {self._duration:.0f}\n"
             f"caminho:        {self._path}\n"
             f"cantor/banda:   {self._singer}\n"
             f"tipo musical:   {self._musicalType}"
         )
 
 class Podcast(AudioArquive):
+    __slots__ = ['_host', '_category', '_date']
+
     def __init__(self, name, host, category, date):
         super().__init__(name)
         self._host = host
@@ -99,7 +106,7 @@ class SoundEffect(AudioArquive):
     def displayData(self):
         print(
             f"nome:     {self._name}\n"
-            f"duração:  {self._duration}\n"
+            f"duração:  {self._duration:.0f}\n"
             f"caminho:  {self._path}"
         )
 
@@ -118,9 +125,9 @@ class SoundEffect(AudioArquive):
         else:
             print("sem canais disponíveis para tocar o efeito!\n")
 
-from pydub import AudioSegment
-
 class Recording(AudioArquive):
+    __slots__ = ['_autor']
+    
     def __init__(self, name, path, autor):
         super().__init__(name, path)
         self._autor = autor
