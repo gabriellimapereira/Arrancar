@@ -69,7 +69,13 @@ class Music(AudioArquive):
         self._musicalType = musicalType
 
     def displayData(self):
-        print(f"nome: {self._name} duração: {self._duration} caminho: {self._path} cantor/banda: {self._singer} tipo musical: {self._musicalType}")
+        print(
+            f"nome:           {self._name}\n"
+            f"duração:        {self._duration}\n"
+            f"caminho:        {self._path}\n"
+            f"cantor/banda:   {self._singer}\n"
+            f"tipo musical:   {self._musicalType}"
+        )
 
 class Podcast(AudioArquive):
     def __init__(self, name, host, category, date):
@@ -79,14 +85,23 @@ class Podcast(AudioArquive):
         self._date = date
 
     def displayData(self):
-        print(f"nome: {self._name} duração: {self._duration} caminho: {self._path} host: {self._host} categoria: {self._category} data de publicação: {self._date}")
+        print(
+            f"nome:     {self._name}\n"
+            f"host:     {self._host}\n"
+            f"categoria:     {self._category}\n"
+            f"data:     {self._date}"
+        )
 
 class SoundEffect(AudioArquive):
     def __init__(self, name):
         super().__init__(name)
 
     def displayData(self):
-        print(f"nome: {self._name} duração: {self._duration} caminho: {self._path}")
+        print(
+            f"nome:     {self._name}\n"
+            f"duração:  {self._duration}\n"
+            f"caminho:  {self._path}"
+        )
 
     def playEffect(self):
         if not pygame.mixer.get_init():
@@ -111,7 +126,11 @@ class Recording(AudioArquive):
         self._autor = autor
 
     def displayData(self):
-        print(f"nome: {self._name} autor: {self._autor} caminho: {self._path}")
+        print(
+            f"nome:     {self._name}\n"
+            f"autor:    {self._autor}\n"
+            f"caminho:  {self._path}"
+        )
 
     @staticmethod
     def record(name):
