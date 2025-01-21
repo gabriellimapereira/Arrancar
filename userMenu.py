@@ -69,9 +69,10 @@ def musicsMenu(user, memorySystem):
         choice = input("escolha uma opção: ")
 
         if choice == "1":
-            if len(memorySystem.musics) == 0:
+            if not memorySystem.musics:
                 print("nenhuma música na lista!")
             else:
+                print("músicas cadastradas: ")
                 for i in memorySystem.musics:
                     i.displayData()
 
@@ -84,7 +85,7 @@ def musicsMenu(user, memorySystem):
             time.sleep(1)
             newMusic = Music(name, singer, musicType)
             memorySystem.musics.append(newMusic)
-            print("música cadastrada com sucesso!\n")
+            print("música cadastrada com sucesso!")
         elif choice == "3":
             print("músicas disponíveis:")
             for i, music in enumerate(memorySystem.musics):
@@ -165,9 +166,12 @@ def podcastMenu(memorySystem):
         choice = input("escolha uma opção: ")
 
         if choice == "1":
-            print("podcasts cadastrados:")
-            for i in memorySystem.podcasts:
-                i.displayData()
+            if not memorySystem.podcasts:
+                print("nenhum podcast cadastrado!")
+            else: 
+                print("podcasts cadastrados:")
+                for i in memorySystem.podcasts:
+                    i.displayData()
         elif choice == "2":
             name = input("qual o nome do podcast a ser reproduzido? ")
             podcast = memorySystem.findAudioByName(memorySystem.podcasts, name)
@@ -191,8 +195,11 @@ def superPodcastMenu(memorySystem):
         choice = input("escolha uma opção: ")
 
         if choice == "1":
-            for i in memorySystem.podcasts:
-                i.displayData()
+            if not memorySystem.podcasts:
+                print("nenhum podcast cadastrado!")
+            else:
+                for i in memorySystem.podcasts:
+                    i.displayData()
         elif choice == "2":
             name = input("qual o nome do podcast a ser reproduzido? ")
             podcast = memorySystem.findAudioByName(memorySystem.podcasts, name)
