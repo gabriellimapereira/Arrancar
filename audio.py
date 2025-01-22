@@ -1,14 +1,14 @@
 from abc import ABC
-import pygame
+import pygame 
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
 from pydub.utils import mediainfo
+from pydub import AudioSegment
 import sounddevice as sd
 import numpy as np
 from scipy.io.wavfile import write
 import threading
 import os
-from pydub import AudioSegment
 
 class AudioArquive(ABC):
     __slots__ = ['_name', '_path', '_duration']
@@ -27,7 +27,7 @@ class AudioArquive(ABC):
         return self._path
     
     def displayData(self):
-        print(f"nome: {self._name} duração: {self._duration} caminho: {self._path}")
+        print(f"Nome: {self._name} Duração: {self._duration} Caminho: {self._path}")
 
     def playAudio(self):
         try:
@@ -35,9 +35,9 @@ class AudioArquive(ABC):
             pygame.mixer.music.load(self._path)
             pygame.mixer.music.play()
         except pygame.error as e:
-            print(f"erro ao tentar tocar o áudio: {e}")
+            print(f"Erro ao tentar tocar o áudio: {e}")
         except Exception as e:
-            print(f"erro inesperado: {e}")
+            print(f"Erro inesperado: {e}")
 
     def stopAudio(self):
         pygame.mixer.music.stop()
@@ -53,14 +53,14 @@ class AudioArquive(ABC):
     
     def findPath(self):
         Tk().withdraw() 
-        path = askopenfilename(title="escolha um arquivo de áudio", filetypes=[("arquivos de áudio", "*.mp3"), ("arquivos de áudio", "*.wav")])
+        path = askopenfilename(title="Escolha um arquivo de áudio", filetypes=[("Aquivos de áudio", "*.mp3"), ("Arquivos de áudio", "*.wav")])
         if not path:
-            raise ValueError("nenhum arquivo foi selecionado!\n")
+            raise ValueError("Nenhum arquivo foi selecionado!\n")
         return path
 
     def getDuration(self):
         if not os.path.exists(self._path):
-            print(f"Erro: O arquivo {self._path} não existe.")
+            print(f"Erro: O arquivo {self._path} não existe!")
             return
         audioInfo = mediainfo(self._path)
         return float(audioInfo['duration'])
@@ -75,11 +75,11 @@ class Music(AudioArquive):
 
     def displayData(self):
         print(
-            f"nome:           {self._name}\n"
-            f"duração:        {self._duration:.0f}\n"
-            f"caminho:        {self._path}\n"
-            f"cantor/banda:   {self._singer}\n"
-            f"tipo musical:   {self._musicalType}"
+            f"Nome:           {self._name}\n"
+            f"Duração:        {self._duration:.0f}\n"
+            f"Caminho:        {self._path}\n"
+            f"Cantor/banda:   {self._singer}\n"
+            f"Tipo musical:   {self._musicalType}"
         )
 
 class Podcast(AudioArquive):
@@ -93,10 +93,10 @@ class Podcast(AudioArquive):
 
     def displayData(self):
         print(
-            f"nome:     {self._name}\n"
-            f"host:     {self._host}\n"
-            f"categoria:     {self._category}\n"
-            f"data:     {self._date}"
+            f"Nome:     {self._name}\n"
+            f"Host:     {self._host}\n"
+            f"Categoria:     {self._category}\n"
+            f"Data:     {self._date}"
         )
 
 class SoundEffect(AudioArquive):
@@ -105,9 +105,9 @@ class SoundEffect(AudioArquive):
 
     def displayData(self):
         print(
-            f"nome:     {self._name}\n"
-            f"duração:  {self._duration:.0f}\n"
-            f"caminho:  {self._path}"
+            f"Nome:     {self._name}\n"
+            f"Duração:  {self._duration:.0f}\n"
+            f"Caminho:  {self._path}"
         )
 
     def playEffect(self):
@@ -119,24 +119,24 @@ class SoundEffect(AudioArquive):
 
         if channel:
             channel.play(sound)
-            print(f"tocando: {self._name}...")
+            print(f"Tocando: {self._name}...")
             while channel.get_busy():
                 pass  
         else:
-            print("sem canais disponíveis para tocar o efeito!\n")
+            print("Sem canais disponíveis para tocar o efeito!\n")
 
 class Recording(AudioArquive):
     __slots__ = ['_autor']
-    
+
     def __init__(self, name, path, autor):
         super().__init__(name, path)
         self._autor = autor
 
     def displayData(self):
         print(
-            f"nome:     {self._name}\n"
-            f"autor:    {self._autor}\n"
-            f"caminho:  {self._path}"
+            f"Nome:     {self._name}\n"
+            f"Autor:    {self._autor}\n"
+            f"Caminho:  {self._path}"
         )
 
     @staticmethod
@@ -153,7 +153,7 @@ class Recording(AudioArquive):
         recordThread = threading.Thread(target=recordAudio)
         recordThread.start()
 
-        input("pressione ENTER para parar a gravação: \n")
+        input("Pressione ENTER para parar a gravação: \n")
         isRecording[0] = False
 
         recordThread.join()
@@ -165,13 +165,12 @@ class Recording(AudioArquive):
         mp3File = f"{name}.mp3"
         try:
             AudioSegment.from_wav(wavFile).export(mp3File, format="mp3")
-            print(f"arquivo convertido para mp3: {mp3File}")
         except Exception as e:
-            print(f"erro ao converter o arquivo para mp3: {e}")
+            print(f"Erro ao converter o arquivo para mp3: {e}")
             return
 
         try:
             os.remove(wavFile)
-            print(f"arquivo temporário wav removido: {wavFile}")
+            print(f"Arquivo temporário wav removido: {wavFile}")
         except Exception as e:
-            print(f"erro ao remover o arquivo wav: {e}")
+            print(f"Erro ao remover o arquivo wav: {e}")

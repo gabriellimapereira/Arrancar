@@ -33,7 +33,7 @@ class User():
                 return newId
             
     def displayUser(self):
-        print("nome: {} id: {}".format(self._name, self._id))
+        print("Nome: {} Id: {}".format(self._name, self._id))
 
     def findRecording(self, name):
         for recording in self._recordings:
@@ -48,11 +48,11 @@ class User():
     def likeSong(self, music):
         if music in self._likedSongs:
             time.sleep(1)
-            print("música retirada da playlist de músicas curtidas!")
+            print("Música retirada da playlist de músicas curtidas!")
             self._likedSongs.remove(music)
         else:
             time.sleep(1)
-            print("música adicionada à playlist de músicas curtidas!")
+            print("Música adicionada à playlist de músicas curtidas!")
             self._likedSongs.append(music)
 
 class SuperUser(User):

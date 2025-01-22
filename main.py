@@ -9,130 +9,144 @@ from userMenu import clear
 
 def manual():
     while True:
-        print("manual de uso:\n")
-        print("áudio: \nexistem quatro classes de áudio: músicas, podcasts, efeitos sonoros e as gravações")
-        print("as músicas, podcasts e efeitos sonoros devem estar no computador do usuário (de preferência no formato .mp3). para reproduzí-los, deve ser feito o cadastro deles. \nou seja, quando entrar no menu de cadastro de algum desses áudios, preencha os campos pedidos. logo após isso, será aberta uma window para a seleção do arquivo de áudio.")
-        print("todos esses áudios cadastrados podem ser acessados por todos os usuários, menos as gravações. elas são particulares. os únicos que podem registrar podcasts são os super usuários.\n")
-        print("efeitos sonoros e gravações: \nos efeitos sonoros podem ser reproduzidos simultaneamente, então fique à vontade para reproduzir vários ao mesmo tempo. quanto às\n gravações, recomenda-se o uso de microfone para captação do áudio.\n")
-        print("ressalvas:\nvale ressaltar que os super usuários devem cadastrar senhas para acesso. quando qualquer tipo de usuário for cadastrado, será gerado um identificador único para ele.")
+        print("MANUAL DE USO:\n")
 
-        verification = input("\nentendido? (pressione Enter para continuar): ")
+        print("1. ÁUDIO:")
+        print("   Existem quatro classes de áudio: Músicas, Podcasts, Efeitos Sonoros e Gravações.")
+        print("   - As Músicas, Podcasts e Efeitos Sonoros devem estar no computador do usuário (de preferência no formato .mp3).")
+        print("   - Para reproduzí-los, é necessário cadastrá-los.")
+        print("   - No menu de cadastro de qualquer um desses áudios, preencha os campos solicitados.")
+        print("   - Após preencher os campos, será aberta uma janela para a seleção do arquivo de áudio.")
+        print("   - Novamente, recomenda-se a escolha de arquivos .mp3.")
+        print("   - Todos os áudios cadastrados podem ser acessados por todos os usuários, exceto as Gravações, que são particulares.")
+        print("   - Apenas os Super Usuários podem registrar Podcasts.\n")
+
+        print("2. EFEITOS SONOROS E GRAVAÇÕES:")
+        print("   - Os Efeitos Sonoros podem ser reproduzidos simultaneamente. Fique à vontade para reproduzir vários ao mesmo tempo.")
+        print("   - Para Gravações, recomenda-se o uso de um microfone para captação do áudio.\n")
+
+        print("3. RESSALVAS:")
+        print("   - Super Usuários devem cadastrar senhas para acesso.")
+        print("   - Quando qualquer tipo de usuário for cadastrado, será gerado um identificador único para ele.\n")
+
+        verification = input("ENTENDIDO? (PRESSIONE ENTER PARA CONTINUAR): ")
         if verification.strip() or verification == "":
             break
 
+
 def idInput():
     while True:
-        id = input("digite o id: ")
+        id = input("Digite o id: ")
         if id.isdigit():
             return int(id)
         else:
-            print("por favor, digite apenas números inteiros!")
+            print("Por favor, digite apenas números inteiros!")
 
 def loginUser(userList, memorySystem):
     userId = idInput()
     for user in userList:
         if user.id == userId:
-            print(f"\nlogin bem-sucedido para o usuário {user._name}!")
+            print(f"\nLogin bem-sucedido para o usuário {user._name}!")
             userMenu.menuUsuario(user, memorySystem)
             return user
-    print("\nid de usuário não encontrado. tente novamente!")
+    print("\nId de usuário não encontrado. Tente novamente!")
     return None
 
 def loginSuperUser(superUserList, memorySystem):
     userId = idInput()
-    password = input("digite sua senha: ")
+    password = input("Digite sua senha: ")
     for superUser in superUserList:
         if superUser.id == userId and superUser.password == password:
-            print(f"\nlogin bem-sucedido para o super usuário {superUser.name}!")
+            print(f"\nLogin bem-sucedido para o super usuário {superUser.name}!")
             userMenu.menuSuperUsuario(superUser, memorySystem)
             return superUser
-    print("\nid ou senha de super usuário incorretos! tente novamente!")
+    print("\nId ou senha de super usuário incorretos! Tente novamente!")
     return None
 
 def registerUser(userList, superUserList):
     choice = None
     while choice not in {"0", "1"}:
-        choice = input("você quer registrar um usuário comum ou um super usuário? (0 para comum / 1 para super usuário): ")
+        choice = input("Você quer registrar um usuário comum ou um super usuário? (0 para comum / 1 para super usuário): ")
         if choice not in {"0", "1"}:
-            print("entrada inválida. digite 0 para usuário comum ou 1 para super usuário!")
+            print("Entrada inválida. Digite 0 para usuário comum ou 1 para super usuário!")
 
     if choice == "0":
-        name = input("digite o seu nome como usuário: ")
+        name = input("Digite o seu nome como usuário: ")
         newUser = User(name, userList, superUserList)
-        print(f"usuário cadastrado! o seu id é: {newUser.id}. não se esqueça dele!")
+        print(f"Usuário cadastrado! o seu id é: {newUser.id}. Não se esqueça dele!")
         userList.append(newUser)
     else:
-        name = input("digite o seu nome como super usuário: ")
-        password = input("agora digite a senha. se lembre dela, ou será f: ")
+        name = input("Digite o seu nome como super usuário: ")
+        password = input("Agora digite a senha. Se lembre dela, ou será f: ")
         newUser = SuperUser(name, userList, superUserList, password)
-        print(f"usuário cadastrado! o seu id é: {newUser.id}. não se esqueça dele!")
+        print(f"Usuário cadastrado! O seu id é: {newUser.id}. Não se esqueça dele!")
         superUserList.append(newUser)
 
 def deleteUser(userList, superUserList):
     choice = None
     while choice not in {"0", "1"}:
-        choice = input("você deseja apagar um usuário comum (0) ou um super usuário (1)? ")
+        choice = input("Você deseja apagar um usuário comum (0) ou um super usuário (1)? ")
         if choice not in {"0", "1"}:
-            print("entrada inválida. digite 0 para usuário comum ou 1 para super usuário!")
+            print("Entrada inválida. Digite 0 para usuário comum ou 1 para super usuário!")
 
     userId = idInput()
 
     if choice == "0": 
         if not userList:
-            print("a lista de usuários está vazia!")
+            print("A lista de usuários está vazia!")
             return
         for user in userList[:]:  
             if user.id == userId:
                 userList.remove(user)
-                print(f"usuário comum com id {userId} foi apagado com sucesso!")
+                print(f"Usuário comum com id {userId} foi apagado com sucesso!")
                 return
-        print("id de usuário comum não encontrado. tente novamente!")
+        print("Id de usuário comum não encontrado. Tente novamente!")
     else:  
         if not superUserList:
-            print("a lista de super usuários está vazia!")
+            print("A lista de super usuários está vazia!")
             return
         for superUser in superUserList[:]:  
             if superUser.id == userId:
                 superUserList.remove(superUser)
-                print(f"super usuário com id {userId} foi apagado com sucesso!")
+                print(f"Super usuário com id {userId} foi apagado com sucesso!")
                 return
-        print("id de super usuário não encontrado. tente novamente!")
+        print("Id de super usuário não encontrado. Tente novamente!")
 
 def listUsers(userList, superUserList):
-    print("lista de usuários comuns:")
+    print("Lista de usuários comuns:")
     if userList:
         for i in userList:
             i.displayUser()
     else:
-        print("não há usuários comuns cadastrados!")
+        print("Não há usuários comuns cadastrados!")
     
-    print("lista de super usuários:")
+    print("Lista de super usuários:")
     if superUserList:
         for i in superUserList:
             i.displayUser()
     else:
-        print("não há super usuários cadastrados!")
+        print("Não há super usuários cadastrados!")
 
 def exitProgram():
-    print("saindo do sistema... até logo!")
+    print("Saindo do sistema... Até logo!")
     exit()
 
 def invalidChoice():
-    print("opção inválida. por favor, tente novamente!")
+    print("Opção inválida. Por favor, tente novamente!")
 
 def loginMenu(userList, superUserList, memorySystem):
-    print("bem-vindo(a) ao arrancar!\ndê uma arrancada na sua vida!")
+    print("Bem-vindo(a) ao Arrancar!\nDê uma arrancada na sua vida! :)")
     while True:
-        print("\nselecione uma opção:")
-        print("1 - entrar como usuário comum")
-        print("2 - entrar como super usuário")
-        print("3 - registrar-se como usuário (ou super usuário)")
-        print("4 - apagar registro de usuário")
-        print("5 - listar todos os usuários")
-        print("0 - sair")
+        print("\nSelecione uma opção:")
+        print("1 - Entrar como usuário comum")
+        print("2 - Entrar como super usuário")
+        print("3 - Registrar-se como usuário (ou super usuário)")
+        print("4 - Apagar registro de usuário")
+        print("5 - Listar todos os usuários")
+        print("0 - Sair")
         
         try:
-            choice = int(input("\ndigite sua escolha: "))
+            choice = int(input("\nDigite a opção: "))
         except ValueError:
             choice = -1
 
